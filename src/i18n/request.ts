@@ -2,14 +2,16 @@ import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { locales, defaultLocale, type Locale } from "./config";
 
-// Static imports for message files - required for Turbopack compatibility
-// Turbopack cannot resolve dynamic imports with template literals
-import esMessages from "@messages/es.json";
-import enMessages from "@messages/en.json";
+// Use require() for JSON files - Turbopack has issues resolving JSON through path aliases
+// with ES module imports. require() is more reliable for JSON modules in Turbopack.
+/* eslint-disable @typescript-eslint/no-require-imports */
+const esMessages = require("../../messages/es.json");
+const enMessages = require("../../messages/en.json");
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 /**
  * Message files mapped by locale
- * Using static imports instead of dynamic imports for Turbopack support
+ * Using require() instead of import for Turbopack JSON compatibility
  */
 const messages: Record<Locale, typeof esMessages> = {
   es: esMessages,
