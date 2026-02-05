@@ -146,7 +146,7 @@ export const ordersRouter = router({
     .mutation(async ({ input }) => {
       // Rate limit by table code to prevent order spam
       const rateKey = `order:${input.tenantSlug}:${input.tableCode}`;
-      const rateResult = checkRateLimit(rateKey, rateLimits.createOrder);
+      const rateResult = await checkRateLimit(rateKey, rateLimits.createOrder);
       if (!rateResult.success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",

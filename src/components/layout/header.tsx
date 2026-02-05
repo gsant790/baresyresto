@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/lib/auth";
+import { logoutUser } from "@/lib/auth-actions";
 import { cn } from "@/lib/utils";
 
 /**
@@ -58,7 +58,7 @@ export function Header({
   }, [isUserMenuOpen]);
 
   const handleLogout = async () => {
-    await signOut();
+    await logoutUser();
     router.push(`/${locale}/login`);
   };
 
