@@ -1,0 +1,292 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "noResults": "No se encontraron resultados",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesion",
+      "subtitle": "Accede a tu cuenta de restaurante",
+      "restaurant": "Restaurante",
+      "restaurantPlaceholder": "tu-restaurante",
+      "email": "Correo electronico",
+      "emailPlaceholder": "tu@email.com",
+      "password": "Contrasena",
+      "passwordPlaceholder": "Tu contrasena",
+      "submit": "Iniciar Sesion",
+      "forgotPassword": "Olvidaste tu contrasena?",
+      "errors": {
+        "invalidCredentials": "Credenciales invalidas",
+        "tenantNotFound": "Restaurante no encontrado",
+        "accountDisabled": "Tu cuenta ha sido desactivada"
+      }
+    },
+    "logout": "Cerrar Sesion"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido, {name}",
+    "stats": {
+      "activeOrders": "Pedidos Activos",
+      "tablesOccupied": "Mesas Ocupadas",
+      "revenueToday": "Ingresos Hoy",
+      "lowStock": "Alertas de Stock",
+      "today": "Hoy",
+      "available": "disponibles",
+      "gross": "bruto",
+      "items": "productos"
+    },
+    "recentActivity": "Actividad Reciente",
+    "noRecentActivity": "Sin actividad reciente para mostrar",
+    "quickActions": "Acciones Rápidas",
+    "newOrder": "Nuevo Pedido",
+    "newTable": "Nueva Mesa",
+    "viewTables": "Ver Mesas",
+    "kitchenView": "Vista de Cocina",
+    "processPayment": "Procesar Pago"
+    },
+    "recentActivity": "Actividad Reciente",
+    "noRecentActivity": "No hay actividad reciente para mostrar"
+  },
+  "menu": {
+    "title": "Menu",
+    "categories": "Categorias",
+    "dishes": "Platos",
+    "addCategory": "Agregar Categoria",
+    "addDish": "Agregar Plato",
+    "price": "Precio",
+    "description": "Descripcion",
+    "allergens": "Alergenos",
+    "available": "Disponible",
+    "unavailable": "No Disponible",
+    "inStock": "En Stock",
+    "outOfStock": "Agotado"
+  },
+  "orders": {
+    "title": "Pedidos",
+    "newOrder": "Nuevo Pedido",
+    "orderNumber": "Pedido #{number}",
+    "table": "Mesa",
+    "status": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmado",
+      "inProgress": "En Preparacion",
+      "ready": "Listo",
+      "delivered": "Entregado",
+      "paid": "Pagado",
+      "cancelled": "Cancelado"
+    },
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "vat": "IVA",
+    "tip": "Propina"
+  },
+  "kitchen": {
+    "title": "Cocina",
+    "newOrders": "Nuevos Pedidos",
+    "inPreparation": "En Preparacion",
+    "ready": "Listos",
+    "markReady": "Marcar como Listo",
+    "startPreparation": "Iniciar Preparacion",
+    "elapsed": "Transcurrido"
+  },
+  "prepConsole": {
+    "title": "Consola de Preparacion",
+    "kitchen": "Cocina",
+    "bar": "Bar",
+    "newOrders": "Nuevos Pedidos",
+    "inPrep": "En Preparacion",
+    "ready": "Listos",
+    "startPrep": "Iniciar Prep",
+    "markReady": "Marcar Listo",
+    "markServed": "Marcar Servido",
+    "elapsed": "Transcurrido",
+    "table": "Mesa",
+    "order": "Pedido",
+    "allergyWarning": "ALERGIA",
+    "noOrders": "No hay pedidos",
+    "waitstaffNotified": "Camarero Notificado",
+    "avgTime": "Tiempo Promedio",
+    "online": "En Linea",
+    "offline": "Sin Conexion",
+    "logout": "Cerrar Sesion",
+    "station": "Estacion",
+    "activeOrders": "Pedidos Activos",
+    "avgTicketTime": "Tiempo Promedio",
+    "clearTicket": "Limpiar Ticket",
+    "totalTime": "Tiempo Total",
+    "status": {
+      "online": "En Linea",
+      "offline": "Sin Conexion",
+      "connected": "Conectado ({latency}ms)"
+    },
+    "views": {
+      "kanban": "Vista Kanban",
+      "list": "Vista Lista"
+    },
+    "history": "Historial",
+    "settings": "Configuracion",
+    "sectors": {
+      "KITCHEN": "Cocina",
+      "BAR": "Bar",
+      "GRILL": "Parrilla",
+      "COLD": "Frios"
+    }
+  },
+  "inventory": {
+    "title": "Inventario",
+    "products": "Productos",
+    "addProduct": "Agregar Producto",
+    "quantity": "Cantidad",
+    "unit": "Unidad",
+    "alertThreshold": "Umbral de Alerta",
+    "lowStock": "Stock Bajo",
+    "units": {
+      "KILOGRAM": "Kilogramo",
+      "GRAM": "Gramo",
+      "LITER": "Litro",
+      "MILLILITER": "Mililitro",
+      "UNIT": "Unidad",
+      "PORTION": "Porcion"
+    }
+  },
+  "tables": {
+    "title": "Mesas",
+    "addTable": "Agregar Mesa",
+    "tableNumber": "Mesa {number}",
+    "capacity": "Capacidad",
+    "zone": "Zona",
+    "qrCode": "Codigo QR",
+    "closeTable": "Cerrar Mesa",
+    "status": {
+      "available": "Disponible",
+      "occupied": "Ocupada",
+      "reserved": "Reservada",
+      "cleaning": "Limpieza"
+    }
+  },
+  "payments": {
+    "title": "Pagos",
+    "closeTable": "Cerrar Mesa",
+    "selectPaymentMethod": "Seleccionar Metodo de Pago",
+    "orderSummary": "Resumen del Pedido",
+    "order": "Pedido",
+    "items": "items",
+    "subtotal": "Subtotal",
+    "vat": "IVA",
+    "tip": "Propina",
+    "total": "Total",
+    "combinedTotal": "Total Combinado",
+    "confirm": "Confirmar Pago",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "noOrders": "No hay pedidos activos para esta mesa",
+    "success": "Mesa cerrada exitosamente",
+    "error": "Error al procesar el pago",
+    "methods": {
+      "cash": "Efectivo",
+      "card": "Tarjeta",
+      "bizum": "Bizum"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "processing": "Procesando",
+      "completed": "Completado",
+      "failed": "Fallido",
+      "refunded": "Reembolsado"
+    }
+  },
+  "users": {
+    "title": "Usuarios",
+    "addUser": "Agregar Usuario",
+    "name": "Nombre",
+    "email": "Correo",
+    "role": "Rol",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "ADMIN": "Administrador",
+      "WAITER": "Camarero",
+      "COOK": "Cocinero",
+      "BARTENDER": "Barman"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "tabs": {
+      "general": "General",
+      "billing": "Facturación e Impuestos",
+      "tips": "Propinas",
+      "integrations": "Integraciones"
+    },
+    "general": {
+      "title": "Configuración General",
+      "restaurantName": "Nombre del Restaurante",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "email": "Correo Electrónico",
+      "timezone": "Zona Horaria",
+      "currency": "Moneda",
+      "save": "Guardar Cambios"
+    },
+    "billing": {
+      "title": "Configuración de Facturación e Impuestos",
+      "vatRate": "Tasa de IVA (%)",
+      "receiptFooter": "Pie de Ticket",
+      "invoicePrefix": "Prefijo de Factura",
+      "invoiceNumber": "Próximo Número de Factura"
+    },
+    "tips": {
+      "title": "Propinas",
+      "enableTips": "Activar Propinas",
+      "tipsDescription": "Permitir que los clientes agreguen propinas a sus cuentas",
+      "suggestedPercentages": "Porcentajes Sugeridos",
+      "percentage1": "Primera opción (%)",
+      "percentage2": "Segunda opción (%)",
+      "percentage3": "Tercera opción (%)"
+    }
+  },
+  "publicMenu": {
+    "viewCart": "Ver Carrito ({count} items)",
+    "addToCart": "Agregar al Carrito",
+    "allergensWarning": "Contiene: {allergens}",
+    "askWaiter": "Consultar al camarero",
+    "all": "Todo",
+    "emptyCart": "Tu carrito esta vacio",
+    "browseMenu": "Explora el menu para agregar items",
+    "yourOrder": "Tu Pedido",
+    "addSpecialInstructions": "Agregar instrucciones",
+    "removeNotes": "Eliminar notas",
+    "specialInstructions": "Instrucciones especiales (alergias, preferencias...)",
+    "additionalNotes": "Notas adicionales para tu pedido",
+    "notesPlaceholder": "Cualquier solicitud especial para la cocina...",
+    "tip": "Propina",
+    "tipDescription": "Tu propina va directamente al personal",
+    "noTip": "Sin propina",
+    "placeOrder": "Realizar Pedido",
+    "processing": "Procesando...",
+    "orderConfirmed": "Pedido Confirmado!",
+    "thankYou": "Gracias por tu pedido",
+    "preparingOrder": "Estamos preparando tu pedido. Lo recibiras en tu mesa pronto.",
+    "estimatedTime": "Tiempo estimado: 15-25 min",
+    "trackOrder": "Seguir Pedido",
+    "newOrder": "Nuevo Pedido",
+    "backToMenu": "Volver al Menu",
+    "orderTimeline": "Historial del Pedido",
+    "orderPlaced": "Realizado"
+  }
+}

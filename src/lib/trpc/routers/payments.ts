@@ -288,6 +288,14 @@ export const paymentsRouter = router({
         });
       }
 
+      // STUB: In production, this would generate real Redsys form data
+      // For now, return mock data that indicates the integration point
+      const merchantCode = process.env.REDSYS_MERCHANT_CODE ?? "STUB_MERCHANT";
+      const terminal = process.env.REDSYS_TERMINAL ?? "1";
+
+      // Generate a unique order reference (Redsys requires max 12 chars)
+      const orderReference = `${order.orderNumber}${Date.now().toString(36)}`.slice(0, 12).toUpperCase();
+
       // Create pending payment record for Bizum
       const payment = await prisma.payment.create({
         data: {
@@ -297,20 +305,13 @@ export const paymentsRouter = router({
           status: "PENDING",
           amount: order.total,
           metadata: {
+            orderReference,
             initiatedAt: new Date().toISOString(),
             returnUrl: input.returnUrl,
             cancelUrl: input.cancelUrl,
           },
         },
       });
-
-      // STUB: In production, this would generate real Redsys form data
-      // For now, return mock data that indicates the integration point
-      const merchantCode = process.env.REDSYS_MERCHANT_CODE ?? "STUB_MERCHANT";
-      const terminal = process.env.REDSYS_TERMINAL ?? "1";
-
-      // Generate a unique order reference (Redsys requires max 12 chars)
-      const orderReference = `${order.orderNumber}${Date.now().toString(36)}`.slice(0, 12).toUpperCase();
 
       return {
         paymentId: payment.id,
@@ -378,12 +379,16 @@ export const paymentsRouter = router({
       const responseCode = parseInt(params.Ds_Response || "9999", 10);
       const bizumReference = params.Ds_AuthorisationCode;
 
-      // Find the payment by looking for metadata with matching order reference
-      // In production, you would store the order reference in the payment record
+      // Find the payment by matching the order reference from the webhook
+      // The orderReference is stored in metadata during payment initiation
       const payment = await prisma.payment.findFirst({
         where: {
           method: "BIZUM",
           status: "PENDING",
+          metadata: {
+            path: ["orderReference"],
+            equals: orderReference,
+          },
         },
         include: {
           order: true,

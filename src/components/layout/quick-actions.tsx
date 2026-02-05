@@ -30,7 +30,7 @@ export function QuickActions({ tenantSlug, locale }: QuickActionsProps) {
     {
       label: "New Order",
       icon: "add_shopping_cart",
-      href: `/${locale}/${tenantSlug}/orders/new`,
+      href: `/${locale}/${tenantSlug}/orders`,
       variant: "primary",
       description: "Create a new order",
     },

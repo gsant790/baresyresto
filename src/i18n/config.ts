@@ -14,7 +14,7 @@ export const defaultLocale: Locale = "es";
  * Locale display names for UI
  */
 export const localeNames: Record<Locale, string> = {
-  es: "Espanol",
+  es: "Español",
   en: "English",
 };
 

@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { auth } from "@/lib/auth";
 import { getTenantBySlug } from "@/lib/tenant";
+import { prisma } from "@/lib/db";
 import { QuickActions } from "@/components/layout/quick-actions";
 
 /**
@@ -56,6 +57,43 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 
   const t = await getTranslations({ locale, namespace: "dashboard" });
 
+  // Fetch dashboard statistics
+  const [activeOrdersCount, occupiedTablesCount, totalTablesCount, revenueToday] = await Promise.all([
+    // Active orders (not paid or cancelled)
+    prisma.order.count({
+      where: {
+        tenantId: tenant.id,
+        status: { notIn: ["PAID", "CANCELLED"] },
+      },
+    }),
+    // Occupied tables (with active orders)
+    prisma.table.count({
+      where: {
+        tenantId: tenant.id,
+        orders: {
+          some: {
+            status: { notIn: ["PAID", "CANCELLED"] },
+          },
+        },
+      },
+    }),
+    // Total tables
+    prisma.table.count({
+      where: { tenantId: tenant.id },
+    }),
+    // Revenue today (sum of completed payments today)
+    prisma.payment.aggregate({
+      where: {
+        tenantId: tenant.id,
+        status: "COMPLETED",
+        createdAt: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+        },
+      },
+      _sum: { amount: true },
+    }),
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Welcome header */}
@@ -78,7 +116,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               receipt_long
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-text-primary-dark">0</p>
+          <p className="mt-2 text-3xl font-bold text-text-primary-dark">{activeOrdersCount}</p>
           <p className="mt-1 text-xs text-text-muted">{t("stats.today")}</p>
         </div>
 
@@ -92,7 +130,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               table_restaurant
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-text-primary-dark">0/0</p>
+          <p className="mt-2 text-3xl font-bold text-text-primary-dark">{occupiedTablesCount}/{totalTablesCount}</p>
           <p className="mt-1 text-xs text-text-muted">{t("stats.available")}</p>
         </div>
 
@@ -105,7 +143,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             <span className="material-symbols-outlined text-success">euro</span>
           </div>
           <p className="mt-2 text-3xl font-bold text-text-primary-dark">
-            0.00 EUR
+            {(revenueToday._sum.amount?.toNumber() ?? 0).toFixed(2)} EUR
           </p>
           <p className="mt-1 text-xs text-text-muted">{t("stats.gross")}</p>
         </div>
@@ -128,7 +166,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
       {/* Quick actions section */}
       <div>
         <h2 className="text-xl font-semibold text-text-primary-dark mb-4">
-          Quick Actions
+          {t("quickActions")}
         </h2>
         <QuickActions tenantSlug={tenantSlug} locale={locale} />
       </div>

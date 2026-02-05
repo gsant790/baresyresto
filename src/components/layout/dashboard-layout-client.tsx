@@ -32,9 +32,11 @@ export function DashboardLayoutClient({
   userRole,
 }: DashboardLayoutClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   return (
     <div className="min-h-screen bg-background-dark">
@@ -46,13 +48,15 @@ export function DashboardLayoutClient({
         userRole={userRole}
         isMobileOpen={isMobileMenuOpen}
         onMobileClose={closeMobileMenu}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={toggleCollapse}
       />
 
       {/* Main content area */}
       <main
         className={cn(
           "transition-all duration-300",
-          "md:ml-64" // Account for desktop sidebar
+          isCollapsed ? "md:ml-20" : "md:ml-64" // Account for desktop sidebar width
         )}
       >
         {/* Header */}

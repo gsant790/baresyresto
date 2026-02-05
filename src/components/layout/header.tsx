@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 /**
@@ -57,12 +58,12 @@ export function Header({
   }, [isUserMenuOpen]);
 
   const handleLogout = async () => {
-    // TODO: Implement actual logout
+    await signOut();
     router.push(`/${locale}/login`);
   };
 
   const handleProfile = () => {
-    router.push(`/${locale}/${tenantSlug}/settings/profile`);
+    router.push(`/${locale}/${tenantSlug}/settings`);
     setIsUserMenuOpen(false);
   };
 

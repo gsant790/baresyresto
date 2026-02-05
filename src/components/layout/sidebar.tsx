@@ -23,6 +23,8 @@ interface SidebarProps {
   userRole?: string;
   isMobileOpen: boolean;
   onMobileClose: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
 interface NavItem {
@@ -39,9 +41,10 @@ export function Sidebar({
   userRole,
   isMobileOpen,
   onMobileClose,
+  isCollapsed,
+  onToggleCollapse,
 }: SidebarProps) {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems: NavItem[] = [
     {
@@ -95,6 +98,15 @@ export function Sidebar({
     if (href === `/${locale}/${tenantSlug}`) {
       return pathname === href;
     }
+
+    // Handle kitchen/bar redirects to /prep/KITCHEN and /prep/BAR
+    if (href === `/${locale}/${tenantSlug}/kitchen` && pathname.includes("/prep/KITCHEN")) {
+      return true;
+    }
+    if (href === `/${locale}/${tenantSlug}/bar` && pathname.includes("/prep/BAR")) {
+      return true;
+    }
+
     return pathname.startsWith(href);
   };
 
@@ -180,7 +192,7 @@ export function Sidebar({
         {/* Collapse toggle - desktop only */}
         <button
           type="button"
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={onToggleCollapse}
           className={cn(
             "mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg",
             "text-text-secondary hover:text-text-primary-dark hover:bg-hover-row",

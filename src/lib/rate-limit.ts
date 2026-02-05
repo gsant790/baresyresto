@@ -1,27 +1,13 @@
+import { kv } from "@vercel/kv";
+
 /**
- * Simple Rate Limiter
+ * Distributed Rate Limiter
  *
- * In-memory rate limiting for public endpoints.
- * For production, replace with Upstash Redis or similar.
+ * Uses Vercel KV (Redis) for rate limiting across serverless function instances.
+ * Works reliably in Vercel's stateless environment, unlike in-memory solutions.
+ *
+ * In development, falls back gracefully if KV is unavailable.
  */
-
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
-}
-
-// In-memory store (replace with Redis for multi-instance deployments)
-const store = new Map<string, RateLimitEntry>();
-
-// Cleanup old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of store.entries()) {
-    if (entry.resetAt < now) {
-      store.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
 
 export interface RateLimitConfig {
   /** Max requests allowed in the window */
@@ -38,37 +24,58 @@ export interface RateLimitResult {
 
 /**
  * Check rate limit for a given identifier (IP, userId, etc.)
+ * Uses Redis for distributed state across serverless instances
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   identifier: string,
   config: RateLimitConfig
-): RateLimitResult {
+): Promise<RateLimitResult> {
+  const key = `ratelimit:${identifier}`;
   const now = Date.now();
   const windowMs = config.windowSec * 1000;
-  const key = identifier;
+  const resetAt = now + windowMs;
 
-  let entry = store.get(key);
+  try {
+    // Get current count
+    const current = await kv.get<number>(key);
 
-  // Create new entry or reset expired one
-  if (!entry || entry.resetAt < now) {
-    entry = {
-      count: 0,
-      resetAt: now + windowMs,
+    if (current === null) {
+      // First request in window
+      await kv.set(key, 1, { ex: config.windowSec });
+      return {
+        success: true,
+        remaining: config.limit - 1,
+        resetAt,
+      };
+    }
+
+    if (current >= config.limit) {
+      // Rate limit exceeded
+      return {
+        success: false,
+        remaining: 0,
+        resetAt,
+      };
+    }
+
+    // Increment count
+    await kv.incr(key);
+
+    return {
+      success: true,
+      remaining: config.limit - current - 1,
+      resetAt,
+    };
+  } catch (error) {
+    console.error("Rate limit error:", error);
+    // Fail open - allow request if Redis unavailable
+    // This ensures service availability in case of KV failures
+    return {
+      success: true,
+      remaining: config.limit,
+      resetAt,
     };
   }
-
-  // Increment count
-  entry.count++;
-  store.set(key, entry);
-
-  const remaining = Math.max(0, config.limit - entry.count);
-  const success = entry.count <= config.limit;
-
-  return {
-    success,
-    remaining,
-    resetAt: entry.resetAt,
-  };
 }
 
 /**

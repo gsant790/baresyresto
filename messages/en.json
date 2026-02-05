@@ -1,0 +1,289 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "noResults": "No results found",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your restaurant account",
+      "restaurant": "Restaurant",
+      "restaurantPlaceholder": "your-restaurant",
+      "email": "Email",
+      "emailPlaceholder": "you@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Sign In",
+      "forgotPassword": "Forgot your password?",
+      "errors": {
+        "invalidCredentials": "Invalid credentials",
+        "tenantNotFound": "Restaurant not found",
+        "accountDisabled": "Your account has been disabled"
+      }
+    },
+    "logout": "Sign Out"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}",
+    "stats": {
+      "activeOrders": "Active Orders",
+      "tablesOccupied": "Tables Occupied",
+      "revenueToday": "Revenue Today",
+      "lowStock": "Low Stock Alerts",
+      "today": "Today",
+      "available": "available",
+      "gross": "gross",
+      "items": "items"
+    },
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity to display",
+    "quickActions": "Quick Actions",
+    "newOrder": "New Order",
+    "newTable": "New Table",
+    "viewTables": "View Tables",
+    "kitchenView": "Kitchen View",
+    "processPayment": "Process Payment"
+  },
+  "menu": {
+    "title": "Menu",
+    "categories": "Categories",
+    "dishes": "Dishes",
+    "addCategory": "Add Category",
+    "addDish": "Add Dish",
+    "price": "Price",
+    "description": "Description",
+    "allergens": "Allergens",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
+  },
+  "orders": {
+    "title": "Orders",
+    "newOrder": "New Order",
+    "orderNumber": "Order #{number}",
+    "table": "Table",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "ready": "Ready",
+      "delivered": "Delivered",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    },
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "tip": "Tip"
+  },
+  "kitchen": {
+    "title": "Kitchen",
+    "newOrders": "New Orders",
+    "inPreparation": "In Preparation",
+    "ready": "Ready",
+    "markReady": "Mark as Ready",
+    "startPreparation": "Start Preparation",
+    "elapsed": "Elapsed"
+  },
+  "prepConsole": {
+    "title": "Preparation Console",
+    "kitchen": "Kitchen",
+    "bar": "Bar",
+    "newOrders": "New Orders",
+    "inPrep": "In Prep",
+    "ready": "Ready",
+    "startPrep": "Start Prep",
+    "markReady": "Mark Ready",
+    "markServed": "Mark Served",
+    "elapsed": "Elapsed",
+    "table": "Table",
+    "order": "Order",
+    "allergyWarning": "ALLERGY",
+    "noOrders": "No orders",
+    "waitstaffNotified": "Waitstaff Notified",
+    "avgTime": "Avg Time",
+    "online": "Online",
+    "offline": "Offline",
+    "logout": "Log Out",
+    "station": "Station",
+    "activeOrders": "Active Orders",
+    "avgTicketTime": "Avg Ticket Time",
+    "clearTicket": "Clear Ticket",
+    "totalTime": "Total Time",
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "connected": "Connected ({latency}ms)"
+    },
+    "views": {
+      "kanban": "Kanban View",
+      "list": "List View"
+    },
+    "history": "History",
+    "settings": "Settings",
+    "sectors": {
+      "KITCHEN": "Kitchen",
+      "BAR": "Bar",
+      "GRILL": "Grill",
+      "COLD": "Cold Station"
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "products": "Products",
+    "addProduct": "Add Product",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "alertThreshold": "Alert Threshold",
+    "lowStock": "Low Stock",
+    "units": {
+      "KILOGRAM": "Kilogram",
+      "GRAM": "Gram",
+      "LITER": "Liter",
+      "MILLILITER": "Milliliter",
+      "UNIT": "Unit",
+      "PORTION": "Portion"
+    }
+  },
+  "tables": {
+    "title": "Tables",
+    "addTable": "Add Table",
+    "tableNumber": "Table {number}",
+    "capacity": "Capacity",
+    "zone": "Zone",
+    "qrCode": "QR Code",
+    "closeTable": "Close Table",
+    "status": {
+      "available": "Available",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "cleaning": "Cleaning"
+    }
+  },
+  "payments": {
+    "title": "Payments",
+    "closeTable": "Close Table",
+    "selectPaymentMethod": "Select Payment Method",
+    "orderSummary": "Order Summary",
+    "order": "Order",
+    "items": "items",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "tip": "Tip",
+    "total": "Total",
+    "combinedTotal": "Combined Total",
+    "confirm": "Confirm Payment",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "noOrders": "No active orders for this table",
+    "success": "Table closed successfully",
+    "error": "Error processing payment",
+    "methods": {
+      "cash": "Cash",
+      "card": "Card",
+      "bizum": "Bizum"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "addUser": "Add User",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "active": "Active",
+    "inactive": "Inactive",
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "ADMIN": "Administrator",
+      "WAITER": "Waiter",
+      "COOK": "Cook",
+      "BARTENDER": "Bartender"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "billing": "Billing & Tax",
+      "tips": "Tips",
+      "integrations": "Integrations"
+    },
+    "general": {
+      "title": "General Settings",
+      "restaurantName": "Restaurant Name",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "timezone": "Timezone",
+      "currency": "Currency",
+      "save": "Save Changes"
+    },
+    "billing": {
+      "title": "Billing & Tax Settings",
+      "vatRate": "VAT Rate (%)",
+      "receiptFooter": "Receipt Footer",
+      "invoicePrefix": "Invoice Prefix",
+      "invoiceNumber": "Next Invoice Number"
+    },
+    "tips": {
+      "title": "Tips",
+      "enableTips": "Enable Tips",
+      "tipsDescription": "Allow customers to add tips to their bills",
+      "suggestedPercentages": "Suggested Percentages",
+      "percentage1": "First option (%)",
+      "percentage2": "Second option (%)",
+      "percentage3": "Third option (%)"
+    }
+  },
+  "publicMenu": {
+    "viewCart": "View Cart ({count} items)",
+    "addToCart": "Add to Cart",
+    "allergensWarning": "Contains: {allergens}",
+    "askWaiter": "Ask your waiter",
+    "all": "All",
+    "emptyCart": "Your cart is empty",
+    "browseMenu": "Browse the menu to add items",
+    "yourOrder": "Your Order",
+    "addSpecialInstructions": "Add special instructions",
+    "removeNotes": "Remove notes",
+    "specialInstructions": "Special instructions (allergies, preferences...)",
+    "additionalNotes": "Additional notes for your order",
+    "notesPlaceholder": "Any special requests for the kitchen...",
+    "tip": "Tip",
+    "tipDescription": "Your tip goes directly to our staff",
+    "noTip": "No tip",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "orderConfirmed": "Order Confirmed!",
+    "thankYou": "Thank you for your order",
+    "preparingOrder": "We're preparing your order. You'll receive it at your table soon.",
+    "estimatedTime": "Estimated time: 15-25 min",
+    "trackOrder": "Track Order",
+    "newOrder": "New Order",
+    "backToMenu": "Back to Menu",
+    "orderTimeline": "Order Timeline",
+    "orderPlaced": "Placed"
+  }
+}
