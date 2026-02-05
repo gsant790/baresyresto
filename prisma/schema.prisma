@@ -1,0 +1,370 @@
+// BaresyResto Database Schema
+// Multi-tenant SaaS for restaurant management
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// TENANT & AUTHENTICATION
+// ============================================
+
+model Tenant {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  email         String
+  phone         String?
+  address       String?
+  logoUrl       String?
+  isActive      Boolean   @default(true)
+  plan          Plan      @default(STARTER)
+  trialEndsAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  users         User[]
+  products      Product[]
+  categories    Category[]
+  dishes        Dish[]
+  tables        Table[]
+  orders        Order[]
+  payments      Payment[]
+  settings      Settings?
+  prepSectors   PrepSector[]
+
+  @@index([slug])
+}
+
+enum Plan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  tenantId      String
+  email         String
+  passwordHash  String?
+  name          String
+  role          Role      @default(WAITER)
+  isActive      Boolean   @default(true)
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders        Order[]   @relation("CreatedBy")
+  closedOrders  Order[]   @relation("ClosedBy")
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  WAITER
+  COOK
+  BARTENDER
+}
+
+// ============================================
+// INVENTORY MANAGEMENT
+// ============================================
+
+model Product {
+  id              String    @id @default(cuid())
+  tenantId        String
+  name            String
+  unit            Unit
+  quantity        Decimal   @db.Decimal(10, 2)
+  alertThreshold  Decimal   @db.Decimal(10, 2)
+  costPerUnit     Decimal?  @db.Decimal(10, 2)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  dishIngredients DishIngredient[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([tenantId, quantity])
+}
+
+enum Unit {
+  KILOGRAM
+  GRAM
+  LITER
+  MILLILITER
+  UNIT
+  PORTION
+}
+
+// ============================================
+// MENU MANAGEMENT
+// ============================================
+
+model Category {
+  id            String      @id @default(cuid())
+  tenantId      String
+  name          String
+  nameEn        String?
+  description   String?
+  displayOrder  Int         @default(0)
+  prepSectorId  String
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  prepSector    PrepSector  @relation(fields: [prepSectorId], references: [id])
+  dishes        Dish[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+model PrepSector {
+  id          String      @id @default(cuid())
+  tenantId    String
+  name        String
+  code        String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  categories  Category[]
+  orderItems  OrderItem[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
+}
+
+model Dish {
+  id            String    @id @default(cuid())
+  tenantId      String
+  categoryId    String
+  name          String
+  nameEn        String?
+  description   String?
+  descriptionEn String?
+  price         Decimal   @db.Decimal(10, 2)
+  imageUrl      String?
+  isAvailable   Boolean   @default(true)
+  isInStock     Boolean   @default(true)
+  allergens     String[]
+  displayOrder  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category      Category        @relation(fields: [categoryId], references: [id])
+  ingredients   DishIngredient[]
+  orderItems    OrderItem[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([tenantId, categoryId])
+  @@index([tenantId, isAvailable, isInStock])
+}
+
+model DishIngredient {
+  id              String    @id @default(cuid())
+  dishId          String
+  productId       String
+  quantityNeeded  Decimal   @db.Decimal(10, 3)
+  createdAt       DateTime  @default(now())
+
+  dish            Dish      @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  product         Product   @relation(fields: [productId], references: [id])
+
+  @@unique([dishId, productId])
+  @@index([productId])
+}
+
+// ============================================
+// TABLE MANAGEMENT
+// ============================================
+
+model Table {
+  id          String      @id @default(cuid())
+  tenantId    String
+  number      Int
+  name        String?
+  qrCode      String      @unique
+  capacity    Int         @default(4)
+  status      TableStatus @default(AVAILABLE)
+  zone        String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders      Order[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId])
+  @@index([qrCode])
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  CLEANING
+}
+
+// ============================================
+// ORDER MANAGEMENT
+// ============================================
+
+model Order {
+  id              String        @id @default(cuid())
+  tenantId        String
+  tableId         String
+  orderNumber     Int
+  status          OrderStatus   @default(PENDING)
+  customerNotes   String?
+  subtotal        Decimal       @db.Decimal(10, 2)
+  vatAmount       Decimal       @db.Decimal(10, 2)
+  tipAmount       Decimal       @db.Decimal(10, 2) @default(0)
+  total           Decimal       @db.Decimal(10, 2)
+  createdById     String?
+  closedById      String?
+  closedAt        DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  table           Table         @relation(fields: [tableId], references: [id])
+  createdBy       User?         @relation("CreatedBy", fields: [createdById], references: [id])
+  closedBy        User?         @relation("ClosedBy", fields: [closedById], references: [id])
+  items           OrderItem[]
+  payment         Payment?
+  statusHistory   OrderStatusHistory[]
+
+  @@index([tenantId])
+  @@index([tenantId, tableId])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  READY
+  DELIVERED
+  PAID
+  CANCELLED
+}
+
+model OrderItem {
+  id            String          @id @default(cuid())
+  orderId       String
+  dishId        String
+  prepSectorId  String
+  quantity      Int
+  unitPrice     Decimal         @db.Decimal(10, 2)
+  notes         String?
+  status        OrderItemStatus @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  dish          Dish            @relation(fields: [dishId], references: [id])
+  prepSector    PrepSector      @relation(fields: [prepSectorId], references: [id])
+
+  @@index([orderId])
+  @@index([prepSectorId, status])
+}
+
+enum OrderItemStatus {
+  PENDING
+  IN_PROGRESS
+  READY
+  SERVED
+  CANCELLED
+}
+
+model OrderStatusHistory {
+  id          String       @id @default(cuid())
+  orderId     String
+  fromStatus  OrderStatus?
+  toStatus    OrderStatus
+  changedAt   DateTime     @default(now())
+  changedBy   String?
+  notes       String?
+
+  order       Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+// ============================================
+// PAYMENTS & BILLING
+// ============================================
+
+model Payment {
+  id              String        @id @default(cuid())
+  tenantId        String
+  orderId         String        @unique
+  method          PaymentMethod
+  status          PaymentStatus @default(PENDING)
+  amount          Decimal       @db.Decimal(10, 2)
+  bizumReference  String?
+  receiptUrl      String?
+  metadata        Json?
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order           Order         @relation(fields: [orderId], references: [id])
+
+  @@index([tenantId])
+  @@index([bizumReference])
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BIZUM
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ============================================
+// SETTINGS
+// ============================================
+
+model Settings {
+  id                    String    @id @default(cuid())
+  tenantId              String    @unique
+  vatRate               Decimal   @db.Decimal(5, 2) @default(10.00)
+  reducedVatRate        Decimal   @db.Decimal(5, 2) @default(4.00)
+  tipEnabled            Boolean   @default(true)
+  tipPercentages        Int[]     @default([5, 10, 15])
+  autoDisableOutOfStock Boolean   @default(true)
+  currency              String    @default("EUR")
+  timezone              String    @default("Europe/Madrid")
+  defaultLanguage       String    @default("es")
+  businessHours         Json?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  tenant                Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}

@@ -1,26 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 @import "tailwindcss";
 
+/**
+ * BaresyResto Global Styles
+ *
+ * Design tokens from: .claude/designs/design-tokens.md
+ * Uses Tailwind CSS v4 with CSS-first configuration
+ */
+
+@theme {
+  /* Brand Colors */
+  --color-primary: #f26c0d;
+  --color-primary-dark: #d95a00;
+
+  /* Background Colors (Dark Theme) */
+  --color-background-dark: #231810;
+  --color-surface-dark: #2d2018;
+  --color-card-dark: #362921;
+  --color-separator: #493222;
+  --color-table-header: #2a1d15;
+  --color-hover-row: #362920;
+
+  /* Background Colors (Light Theme) */
+  --color-background-light: #f8f7f5;
+  --color-surface-light: #ffffff;
+
+  /* Text Colors */
+  --color-text-primary-dark: #ffffff;
+  --color-text-primary-light: #0f172a;
+  --color-text-secondary: #cba990;
+  --color-text-muted: #94a3b8;
+
+  /* Status Colors */
+  --color-success: #22c55e;
+  --color-success-light: #4ade80;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Font Family */
+  --font-sans: "Work Sans", sans-serif;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 30px;
+  --radius-full: 9999px;
+}
+
+/* CSS Variables for theme switching */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-background-dark);
+  --foreground: var(--color-text-primary-dark);
+  --surface: var(--color-surface-dark);
+  --card: var(--color-card-dark);
+  --muted: var(--color-text-muted);
+  --accent: var(--color-primary);
+  --accent-foreground: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light theme override */
+[data-theme="light"] {
+  --background: var(--color-background-light);
+  --foreground: var(--color-text-primary-light);
+  --surface: var(--color-surface-light);
+  --card: var(--color-surface-light);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base styles */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Material Symbols configuration */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-separator);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Focus outline for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Transition defaults */
+* {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-timing-function: ease;
+  transition-duration: 150ms;
 }
