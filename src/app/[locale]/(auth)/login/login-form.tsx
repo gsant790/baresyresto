@@ -57,7 +57,7 @@ export function LoginForm({ translations: t, locale }: LoginFormProps) {
         }
       } else if (result?.ok) {
         // Redirect to dashboard
-        router.push(`/${locale}/${tenantSlug}/dashboard`);
+        router.push(`/${locale}/${tenantSlug}`);
         router.refresh();
       }
     } catch {
