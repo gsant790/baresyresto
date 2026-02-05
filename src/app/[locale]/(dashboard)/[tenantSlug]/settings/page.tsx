@@ -112,10 +112,12 @@ export default async function SettingsPage({ params }: SettingsPageProps) {
       locale={locale}
       translations={{
         title: t("title"),
-        general: t("tabs.general"),
-        billing: t("tabs.billing"),
-        tips: t("tabs.tips"),
-        integrations: t("tabs.integrations"),
+        tabs: {
+          general: t("tabs.general"),
+          billing: t("tabs.billing"),
+          tips: t("tabs.tips"),
+          integrations: t("tabs.integrations"),
+        },
         generalSettings: t("general.title"),
         billingSettings: t("billing.title"),
         tipsSettings: t("tips.title"),

@@ -39,10 +39,12 @@ interface SettingsPageClientProps {
   locale: string;
   translations: {
     title: string;
-    general: string;
-    billing: string;
-    tips: string;
-    integrations: string;
+    tabs: {
+      general: string;
+      billing: string;
+      tips: string;
+      integrations: string;
+    };
     generalSettings: string;
     billingSettings: string;
     tipsSettings: string;
@@ -70,10 +72,10 @@ export function SettingsPageClient({
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
 
   const tabs: { id: SettingsTab; label: string; icon: string }[] = [
-    { id: "general", label: t.general, icon: "settings" },
-    { id: "billing", label: t.billing, icon: "receipt" },
-    { id: "tips", label: t.tips, icon: "volunteer_activism" },
-    { id: "integrations", label: t.integrations, icon: "integration_instructions" },
+    { id: "general", label: t.tabs.general, icon: "settings" },
+    { id: "billing", label: t.tabs.billing, icon: "receipt" },
+    { id: "tips", label: t.tabs.tips, icon: "volunteer_activism" },
+    { id: "integrations", label: t.tabs.integrations, icon: "integration_instructions" },
   ];
 
   return (
@@ -655,7 +657,7 @@ function IntegrationsSettings({ translations: t }: { translations: SettingsPageC
     <div className="bg-card-dark rounded-xl border border-separator">
       <div className="px-6 py-4 border-b border-separator">
         <h2 className="text-lg font-semibold text-text-primary-dark">
-          {t.integrations}
+          {t.tabs.integrations}
         </h2>
         <p className="text-sm text-text-secondary mt-1">
           Connect with third-party services
