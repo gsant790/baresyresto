@@ -62,11 +62,6 @@ export function Header({
     router.push(`/${locale}/login`);
   };
 
-  const handleProfile = () => {
-    router.push(`/${locale}/${tenantSlug}/settings`);
-    setIsUserMenuOpen(false);
-  };
-
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-separator bg-surface-dark px-4 md:px-6">
       {/* Left section */}
@@ -95,7 +90,7 @@ export function Header({
         <button
           type="button"
           onClick={() => setShowSearch(!showSearch)}
-          className="p-2 text-text-secondary hover:text-text-primary-dark hover:bg-hover-row rounded-lg hidden sm:block"
+          className="flex items-center justify-center p-2 text-text-secondary hover:text-text-primary-dark hover:bg-hover-row rounded-lg hidden sm:block"
           aria-label="Search"
         >
           <span className="material-symbols-outlined">search</span>
@@ -104,7 +99,7 @@ export function Header({
         {/* Notifications button */}
         <button
           type="button"
-          className="relative p-2 text-text-secondary hover:text-text-primary-dark hover:bg-hover-row rounded-lg"
+          className="flex items-center justify-center relative p-2 text-text-secondary hover:text-text-primary-dark hover:bg-hover-row rounded-lg"
           aria-label="Notifications"
         >
           <span className="material-symbols-outlined">notifications</span>
@@ -150,17 +145,6 @@ export function Header({
 
               {/* Menu items */}
               <div className="py-2">
-                <button
-                  type="button"
-                  onClick={handleProfile}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-text-secondary hover:bg-hover-row hover:text-text-primary-dark transition-colors"
-                >
-                  <span className="material-symbols-outlined text-lg">
-                    person
-                  </span>
-                  <span className="text-sm font-medium">Profile</span>
-                </button>
-
                 <button
                   type="button"
                   onClick={() => {

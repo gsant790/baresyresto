@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,6 +40,12 @@ interface SettingsPageClientProps {
   translations: {
     title: string;
     general: string;
+    billing: string;
+    tips: string;
+    integrations: string;
+    generalSettings: string;
+    billingSettings: string;
+    tipsSettings: string;
     vatRate: string;
     currency: string;
     timezone: string;
@@ -65,9 +71,9 @@ export function SettingsPageClient({
 
   const tabs: { id: SettingsTab; label: string; icon: string }[] = [
     { id: "general", label: t.general, icon: "settings" },
-    { id: "billing", label: "Billing & Tax", icon: "receipt" },
-    { id: "tips", label: t.tips.title, icon: "volunteer_activism" },
-    { id: "integrations", label: "Integrations", icon: "integration_instructions" },
+    { id: "billing", label: t.billing, icon: "receipt" },
+    { id: "tips", label: t.tips, icon: "volunteer_activism" },
+    { id: "integrations", label: t.integrations, icon: "integration_instructions" },
   ];
 
   return (
@@ -119,7 +125,7 @@ export function SettingsPageClient({
           {activeTab === "tips" && (
             <TipsSettings settings={settings} translations={t} />
           )}
-          {activeTab === "integrations" && <IntegrationsSettings />}
+          {activeTab === "integrations" && <IntegrationsSettings translations={t} />}
         </div>
       </div>
     </div>
@@ -137,7 +143,7 @@ function GeneralSettings({
     <div className="bg-card-dark rounded-xl border border-separator">
       <div className="px-6 py-4 border-b border-separator">
         <h2 className="text-lg font-semibold text-text-primary-dark">
-          {t.general}
+          {t.generalSettings}
         </h2>
         <p className="text-sm text-text-secondary mt-1">
           Basic restaurant information
@@ -279,7 +285,7 @@ function BillingSettings({
     <div className="bg-card-dark rounded-xl border border-separator">
       <div className="px-6 py-4 border-b border-separator">
         <h2 className="text-lg font-semibold text-text-primary-dark">
-          Billing & Tax Settings
+          {t.billingSettings}
         </h2>
         <p className="text-sm text-text-secondary mt-1">
           Configure VAT rates and currency
@@ -429,11 +435,74 @@ function TipsSettings({
   settings: Settings;
   translations: SettingsPageClientProps["translations"];
 }) {
+  const [tipEnabled, setTipEnabled] = useState(settings.tipEnabled);
+  const [tipPercentages, setTipPercentages] = useState<number[]>(
+    settings.tipPercentages ?? [5, 10, 15]
+  );
+  const [newPercentageInput, setNewPercentageInput] = useState("");
+  const [saveMessage, setSaveMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  const handleTipToggle = (enabled: boolean) => {
+    setTipEnabled(enabled);
+  };
+
+  const handleDeletePercentage = (index: number) => {
+    setTipPercentages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAddPercentage = () => {
+    const value = newPercentageInput.trim();
+    if (!value) {
+      setSaveMessage({
+        type: "error",
+        text: "Please enter a percentage value",
+      });
+      return;
+    }
+
+    const num = parseInt(value, 10);
+    if (isNaN(num) || num < 0 || num > 100) {
+      setSaveMessage({
+        type: "error",
+        text: "Please enter a valid percentage between 0 and 100",
+      });
+      return;
+    }
+
+    if (tipPercentages.includes(num)) {
+      setSaveMessage({
+        type: "error",
+        text: "This percentage already exists",
+      });
+      return;
+    }
+
+    setTipPercentages((prev) => [...prev, num].sort((a, b) => a - b));
+    setNewPercentageInput("");
+    setSaveMessage(null);
+  };
+
+  const handleSaveTips = async () => {
+    try {
+      // TODO: Call tRPC mutation to save settings
+      // For now, just show success message
+      console.log("Saving tips:", { tipEnabled, tipPercentages });
+      setSaveMessage({ type: "success", text: "Tips settings saved successfully" });
+      setTimeout(() => setSaveMessage(null), 3000);
+    } catch (error) {
+      console.error("Failed to save:", error);
+      setSaveMessage({ type: "error", text: "Failed to save tips settings" });
+    }
+  };
+
   return (
     <div className="bg-card-dark rounded-xl border border-separator">
       <div className="px-6 py-4 border-b border-separator">
         <h2 className="text-lg font-semibold text-text-primary-dark">
-          {t.tips.title}
+          {t.tipsSettings}
         </h2>
         <p className="text-sm text-text-secondary mt-1">
           Configure tipping options for customers
@@ -441,6 +510,20 @@ function TipsSettings({
       </div>
 
       <div className="p-6 space-y-6">
+        {/* Save message */}
+        {saveMessage && (
+          <div
+            className={cn(
+              "p-4 rounded-lg text-sm font-medium",
+              saveMessage.type === "success"
+                ? "bg-success/20 text-success border border-success/30"
+                : "bg-error/20 text-error border border-error/30"
+            )}
+          >
+            {saveMessage.text}
+          </div>
+        )}
+
         {/* Tips enabled toggle */}
         <div className="flex items-center justify-between p-4 rounded-lg bg-surface-dark border border-separator">
           <div>
@@ -453,58 +536,84 @@ function TipsSettings({
           </div>
           <button
             type="button"
+            onClick={() => handleTipToggle(!tipEnabled)}
             className={cn(
               "relative w-12 h-6 rounded-full transition-colors",
-              settings.tipEnabled ? "bg-primary" : "bg-surface-dark border border-separator"
+              tipEnabled ? "bg-primary" : "bg-surface-dark border border-separator"
             )}
           >
             <span
               className={cn(
                 "absolute top-1 w-4 h-4 rounded-full bg-white transition-transform",
-                settings.tipEnabled ? "translate-x-7" : "translate-x-1"
+                tipEnabled ? "translate-x-7" : "translate-x-1"
               )}
             />
           </button>
         </div>
 
         {/* Tip percentages */}
-        <div>
+        <div
+          className={cn(!tipEnabled && "opacity-50 pointer-events-none")}
+        >
           <label className="block text-sm font-medium text-text-secondary mb-2">
             {t.tips.percentages}
           </label>
-          <div className="flex flex-wrap gap-3">
-            {settings.tipPercentages.map((percentage, index) => (
-              <div
-                key={index}
+          <div className="space-y-4">
+            {/* Percentage chips */}
+            <div className="flex flex-wrap gap-3">
+              {tipPercentages.map((percentage, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-lg",
+                    "bg-surface-dark border border-separator"
+                  )}
+                >
+                  <span className="text-text-primary-dark font-medium">
+                    {percentage}%
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeletePercentage(index)}
+                    className="text-text-muted hover:text-error transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      close
+                    </span>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Add percentage input */}
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={newPercentageInput}
+                onChange={(e) => setNewPercentageInput(e.target.value)}
+                placeholder="Enter percentage (0-100)"
+                min="0"
+                max="100"
+                className={cn(
+                  "flex-1 px-4 py-2 rounded-lg",
+                  "bg-surface-dark border border-separator",
+                  "text-text-primary-dark placeholder:text-text-muted",
+                  "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                )}
+              />
+              <button
+                type="button"
+                onClick={handleAddPercentage}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-lg",
-                  "bg-surface-dark border border-separator"
+                  "bg-primary/20 text-primary border border-primary/30",
+                  "hover:bg-primary/30 transition-colors"
                 )}
               >
-                <span className="text-text-primary-dark font-medium">
-                  {percentage}%
-                </span>
-                <button
-                  type="button"
-                  className="text-text-muted hover:text-error transition-colors"
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    close
-                  </span>
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg",
-                "bg-primary/20 text-primary border border-primary/30",
-                "hover:bg-primary/30 transition-colors"
-              )}
-            >
-              <span className="material-symbols-outlined text-sm">add</span>
-              Add
-            </button>
+                <span className="material-symbols-outlined text-sm">add</span>
+                Add
+              </button>
+            </div>
           </div>
           <p className="mt-2 text-xs text-text-muted">
             Suggested tip percentages shown to customers
@@ -525,6 +634,7 @@ function TipsSettings({
           </button>
           <button
             type="button"
+            onClick={handleSaveTips}
             className={cn(
               "px-6 py-2 rounded-lg font-bold text-sm",
               "bg-primary text-white",
@@ -540,12 +650,12 @@ function TipsSettings({
   );
 }
 
-function IntegrationsSettings() {
+function IntegrationsSettings({ translations: t }: { translations: SettingsPageClientProps["translations"] }) {
   return (
     <div className="bg-card-dark rounded-xl border border-separator">
       <div className="px-6 py-4 border-b border-separator">
         <h2 className="text-lg font-semibold text-text-primary-dark">
-          Integrations
+          {t.integrations}
         </h2>
         <p className="text-sm text-text-secondary mt-1">
           Connect with third-party services
