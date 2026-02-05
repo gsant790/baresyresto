@@ -4,8 +4,8 @@ import { locales, defaultLocale, type Locale } from "./config";
 
 // Static imports for message files - required for Turbopack compatibility
 // Turbopack cannot resolve dynamic imports with template literals
-import esMessages from "../../messages/es.json";
-import enMessages from "../../messages/en.json";
+import esMessages from "@messages/es.json";
+import enMessages from "@messages/en.json";
 
 /**
  * Message files mapped by locale
