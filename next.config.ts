@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
   // Enable strict mode for better development experience
   reactStrictMode: true,
 
+  // Turbopack configuration - required for next-intl compatibility
+  // The empty object provides next-intl with the proper location to add its aliases
+  turbopack: {},
+
   // Image optimization configuration
   images: {
     remotePatterns: [
