@@ -1,29 +1,38 @@
 import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { locales, defaultLocale, type Locale } from "./config";
-
-// Use require() for JSON files - Turbopack has issues resolving JSON through path aliases
-// with ES module imports. require() is more reliable for JSON modules in Turbopack.
-/* eslint-disable @typescript-eslint/no-require-imports */
-const esMessages = require("../../messages/es.json");
-const enMessages = require("../../messages/en.json");
-/* eslint-enable @typescript-eslint/no-require-imports */
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 /**
- * Message files mapped by locale
- * Using require() instead of import for Turbopack JSON compatibility
+ * Load messages from JSON files using fs.readFileSync
+ *
+ * This approach uses Node.js fs module with absolute paths constructed
+ * via process.cwd() to bypass Turbopack's module resolution issues.
+ * Turbopack has trouble resolving JSON files through import() or require()
+ * at build time, but fs.readFileSync with absolute paths works reliably
+ * in both development and Vercel production environments.
  */
-const messages: Record<Locale, typeof esMessages> = {
-  es: esMessages,
-  en: enMessages,
-};
+function loadMessages(locale: Locale): Record<string, unknown> {
+  const messagesPath = path.join(process.cwd(), "messages", `${locale}.json`);
+
+  try {
+    const fileContents = fs.readFileSync(messagesPath, "utf-8");
+    return JSON.parse(fileContents) as Record<string, unknown>;
+  } catch (error) {
+    console.error(`Failed to load messages for locale "${locale}":`, error);
+    // Return empty object as fallback to prevent app crash
+    return {};
+  }
+}
 
 /**
  * next-intl Request Configuration
  *
  * Loads messages for the current locale during server-side rendering.
- * Messages are loaded from statically imported JSON files to ensure
- * compatibility with both Webpack and Turbopack bundlers.
+ * Messages are loaded from JSON files using fs.readFileSync with absolute
+ * paths to ensure compatibility with both Webpack and Turbopack bundlers,
+ * as well as Vercel's production build environment.
  */
 export default getRequestConfig(async ({ requestLocale }) => {
   // Get the requested locale, with fallback to default
@@ -32,6 +41,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: messages[locale],
+    messages: loadMessages(locale),
   };
 });
