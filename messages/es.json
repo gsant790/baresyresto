@@ -57,9 +57,6 @@
     "viewTables": "Ver Mesas",
     "kitchenView": "Vista de Cocina",
     "processPayment": "Procesar Pago"
-    },
-    "recentActivity": "Actividad Reciente",
-    "noRecentActivity": "No hay actividad reciente para mostrar"
   },
   "menu": {
     "title": "Menu",
